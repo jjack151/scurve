@@ -5,7 +5,8 @@
 import math
 
 def graycode(x):
-    return x^(x>>1)
+    x_int = int(x)
+    return x_int^(x_int>>1)
 
 
 def igraycode(x):
@@ -105,7 +106,7 @@ def entropy(data, blocksize, offset, symbols=256):
         Returns local byte entropy for a location in a file.
     """
     if len(data) < blocksize:
-        raise ValueError, "Data length must be larger than block size."
+        raise ValueError("Data length must be larger than block size.")
     if offset < blocksize/2:
         start = 0
     elif offset > len(data)-blocksize/2:

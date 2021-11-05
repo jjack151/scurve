@@ -1,4 +1,4 @@
-import hilbert, zigzag, zorder, natural, graycurve, hcurve
+import scurve.hilbert, scurve.zigzag, scurve.zorder, scurve.natural, scurve.graycurve, scurve.hcurve
 
 
 curveMap = {

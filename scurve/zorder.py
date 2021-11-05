@@ -1,5 +1,5 @@
 import math
-import utils
+import scurve.utils
 
 
 class ZOrder:

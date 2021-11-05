@@ -1,10 +1,11 @@
-import utils, math
+import scurve.utils
+import math
 
 
 def transform(entry, direction, width, x):
     assert x < 2**width
     assert entry < 2**width
-    return utils.rrot((x^entry), direction+1, width)
+    return scurve.utils.rrot((x^entry), direction+1, width)
 
 
 def itransform(entry, direction, width, x):
@@ -13,7 +14,7 @@ def itransform(entry, direction, width, x):
     """
     assert x < 2**width
     assert entry < 2**width
-    return utils.lrot(x, direction+1, width)^entry
+    return scurve.utils.lrot(x, direction+1, width)^entry
     # There is an error in the Hamilton paper's formulation of the inverse
     # transform in Lemma 2.12. The correct restatement as a transform is as follows:
     #return transform(rrot(entry, direction+1, width), width-direction-2, width, x)
@@ -24,16 +25,16 @@ def direction(x, n):
     if x == 0:
         return 0
     elif x%2 == 0:
-        return utils.tsb(x-1, n)%n
+        return scurve.utils.tsb(x-1, n)%n
     else:
-        return utils.tsb(x, n)%n
+        return scurve.utils.tsb(x, n)%n
 
 
 def entry(x):
     if x == 0:
         return 0
     else:
-        return utils.graycode(2*((x-1)/2))
+        return scurve.utils.graycode(2*((x-1)/2))
 
 
 def hilbert_point(dimension, order, h):
@@ -50,13 +51,13 @@ def hilbert_point(dimension, order, h):
     e, d = 0, 0
     p = [0]*dimension
     for i in range(order):
-        w = utils.bitrange(h, hwidth, i*dimension, i*dimension+dimension)
-        l = utils.graycode(w)
+        w = scurve.utils.bitrange(h, hwidth, i*dimension, i*dimension+dimension)
+        l = scurve.utils.graycode(w)
         l = itransform(e, d, dimension, l)
         for j in range(dimension):
-            b = utils.bitrange(l, dimension, j, j+1)
-            p[j] = utils.setbit(p[j], order, i, b)
-        e = e ^ utils.lrot(entry(w), d+1, dimension)
+            b = scurve.utils.bitrange(l, dimension, j, j+1)
+            p[j] = scurve.utils.setbit(p[j], order, i, b)
+        e = e ^ scurve.utils.lrot(entry(w), d+1, dimension)
         d = (d + direction(w, dimension) + 1)%dimension
     return p
 
@@ -66,11 +67,11 @@ def hilbert_index(dimension, order, p):
     for i in range(order):
         l = 0
         for x in range(dimension):
-            b = utils.bitrange(p[dimension-x-1], order, i, i+1)
+            b = scurve.utils.bitrange(p[dimension-x-1], order, i, i+1)
             l |= b<<x
         l = transform(e, d, dimension, l)
         w = utils.igraycode(l)
-        e = e ^ utils.lrot(entry(w), d+1, dimension)
+        e = e ^ scurve.utils.lrot(entry(w), d+1, dimension)
         d = (d + direction(w, dimension) + 1)%dimension
         h = (h<<dimension)|w
     return h
