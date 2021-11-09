@@ -5,7 +5,6 @@ import scurve
 from scurve import progress, utils, draw
 from PIL import Image, ImageDraw
 
-
 class _Color:
     def __init__(self, data, block):
         self.data, self.block = data, block
@@ -164,7 +163,7 @@ def main():
     if len(args) not in [1, 2]:
         parser.error("Please specify input and output file.")
 
-    for filename in os.listdir(args[0])
+    for filename in os.listdir(args[0]):
         full_path = os.path.join(args[0], filename)
         if os.path.isfile(full_path):
             f = open(full_path, 'r')
