@@ -110,9 +110,9 @@ def entropy(data, blocksize, offset, symbols=256):
     if offset < blocksize/2:
         start = 0
     elif offset > len(data)-blocksize/2:
-        start = len(data)-blocksize/2
+        start = int(len(data)-blocksize/2)
     else:
-        start = offset-blocksize/2
+        start = int(offset-blocksize/2)
     hist = {}
     for i in data[start:start+blocksize]:
         hist[i] = hist.get(i, 0) + 1
