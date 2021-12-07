@@ -166,54 +166,152 @@ def main():
     for filename in os.listdir(args[0]):
         full_path = os.path.join(args[0], filename)
         if os.path.isfile(full_path):
-            f = open(full_path, 'r')
-            d = f.read()
-            base = os.path.basename(full_path)
-            if "." in base:
-                base, _ = base.rsplit(".", 1)
-            dst_file = base + options.suffix + ".png"
-            dst = os.path.join(args[1], dst_file)
-        
-            if os.path.exists(dst) and len(args) < 2:
-                print >> sys.stderr, "Refusing to over-write '%s'. Specify explicitly if you really want to do this."%dst
-                sys.exit(1)
-        
-            block = None
-            if options.block:
-                parts = options.block.split(":")
-                if len(parts) not in [2, 3]:
-                    raise ValueError("Invalid block specification.")
-                s, e = int(parts[0], 16), int(parts[1], 16)
-                if len(parts) == 3:
-                    c = draw.parseColor(parts[2])
-                else:
-                    c = [255, 0, 0]
-                block = (s, e, c)
-        
-            if options.color == "class":
-                csource = ColorClass(d, block)
-            elif options.color == "hilbert":
-                csource = ColorHilbert(d, block)
-            elif options.color == "gradient":
-                csource = ColorGradient(d, block)
-            else:
-                csource = ColorEntropy(d, block)
-        
-        
-            if options.progress:
-                print(dst)
-        
-            if options.quiet or options.progress:
-                prog = progress.Dummy()
-            else:
-                prog = progress.Progress(None)
-        
-        
-            if options.type == "unrolled":
-                drawmap_unrolled(options.map, options.size, csource, dst, prog)
-            elif options.type == "square":
-                drawmap_square(options.map, options.size, csource, dst, prog)
-            prog.clear()
+            try:
+                with open(full_path, "r") as f:
+                    d = f.read()
+                    base = os.path.basename(full_path)
+                    if "." in base:
+                        base, _ = base.rsplit(".", 1)
+                    dst_file = base + options.suffix + ".png"
+                    dst = os.path.join(args[1], dst_file)
+
+                    if os.path.exists(dst) and len(args) < 2:
+                        print >> sys.stderr, "Refusing to over-write '%s'. Specify explicitly if you really want to do this." % dst
+                        sys.exit(1)
+
+                    block = None
+                    if options.block:
+                        parts = options.block.split(":")
+                        if len(parts) not in [2, 3]:
+                            raise ValueError("Invalid block specification.")
+                        s, e = int(parts[0], 16), int(parts[1], 16)
+                        if len(parts) == 3:
+                            c = draw.parseColor(parts[2])
+                        else:
+                            c = [255, 0, 0]
+                        block = (s, e, c)
+
+                    if options.color == "class":
+                        csource = ColorClass(d, block)
+                    elif options.color == "hilbert":
+                        csource = ColorHilbert(d, block)
+                    elif options.color == "gradient":
+                        csource = ColorGradient(d, block)
+                    else:
+                        csource = ColorEntropy(d, block)
+
+                    if options.progress:
+                        print(dst)
+
+                    if options.quiet or options.progress:
+                        prog = progress.Dummy()
+                    else:
+                        prog = progress.Progress(None)
+
+                    if options.type == "unrolled":
+                        drawmap_unrolled(options.map, options.size, csource, dst, prog)
+                    elif options.type == "square":
+                        drawmap_square(options.map, options.size, csource, dst, prog)
+                    prog.clear()
+            except Exception as e:
+                try:
+                    with open(full_path, "r", encoding="utf-8") as f:
+                        d = f.read()
+                        base = os.path.basename(full_path)
+                        if "." in base:
+                            base, _ = base.rsplit(".", 1)
+                        dst_file = base + options.suffix + ".png"
+                        dst = os.path.join(args[1], dst_file)
+
+                        if os.path.exists(dst) and len(args) < 2:
+                            print >> sys.stderr, "Refusing to over-write '%s'. Specify explicitly if you really want to do this." % dst
+                            sys.exit(1)
+
+                        block = None
+                        if options.block:
+                            parts = options.block.split(":")
+                            if len(parts) not in [2, 3]:
+                                raise ValueError("Invalid block specification.")
+                            s, e = int(parts[0], 16), int(parts[1], 16)
+                            if len(parts) == 3:
+                                c = draw.parseColor(parts[2])
+                            else:
+                                c = [255, 0, 0]
+                            block = (s, e, c)
+
+                        if options.color == "class":
+                            csource = ColorClass(d, block)
+                        elif options.color == "hilbert":
+                            csource = ColorHilbert(d, block)
+                        elif options.color == "gradient":
+                            csource = ColorGradient(d, block)
+                        else:
+                            csource = ColorEntropy(d, block)
+
+                        if options.progress:
+                            print(dst)
+
+                        if options.quiet or options.progress:
+                            prog = progress.Dummy()
+                        else:
+                            prog = progress.Progress(None)
+
+                        if options.type == "unrolled":
+                            drawmap_unrolled(options.map, options.size, csource, dst, prog)
+                        elif options.type == "square":
+                            drawmap_square(options.map, options.size, csource, dst, prog)
+                        prog.clear()
+                except Exception as e2:
+                    try:
+                        with open(full_path, "r", encoding="latin1") as f:
+                            d = f.read()
+                            base = os.path.basename(full_path)
+                            if "." in base:
+                                base, _ = base.rsplit(".", 1)
+                            dst_file = base + options.suffix + ".png"
+                            dst = os.path.join(args[1], dst_file)
+
+                            if os.path.exists(dst) and len(args) < 2:
+                                print >> sys.stderr, "Refusing to over-write '%s'. Specify explicitly if you really want to do this." % dst
+                                sys.exit(1)
+
+                            block = None
+                            if options.block:
+                                parts = options.block.split(":")
+                                if len(parts) not in [2, 3]:
+                                    raise ValueError("Invalid block specification.")
+                                s, e = int(parts[0], 16), int(parts[1], 16)
+                                if len(parts) == 3:
+                                    c = draw.parseColor(parts[2])
+                                else:
+                                    c = [255, 0, 0]
+                                block = (s, e, c)
+
+                            if options.color == "class":
+                                csource = ColorClass(d, block)
+                            elif options.color == "hilbert":
+                                csource = ColorHilbert(d, block)
+                            elif options.color == "gradient":
+                                csource = ColorGradient(d, block)
+                            else:
+                                csource = ColorEntropy(d, block)
+
+                            if options.progress:
+                                print(dst)
+
+                            if options.quiet or options.progress:
+                                prog = progress.Dummy()
+                            else:
+                                prog = progress.Progress(None)
+
+                            if options.type == "unrolled":
+                                drawmap_unrolled(options.map, options.size, csource, dst, prog)
+                            elif options.type == "square":
+                                drawmap_square(options.map, options.size, csource, dst, prog)
+                            prog.clear()
+                    except Exception as e3:
+                        return False
+
 
 
 main()
